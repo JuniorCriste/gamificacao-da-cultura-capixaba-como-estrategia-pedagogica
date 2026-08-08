@@ -34,7 +34,7 @@
             position: relative;
         }
 
-        .bg-elements {
+.bg-elements {
             position: absolute;
             top: 0;
             left: 0;
@@ -47,9 +47,31 @@
 
         .floating-icon {
             position: absolute;
-            opacity: 0.15;
-            animation: floatAnim 15s infinite linear;
+            opacity: 0.18;
             user-select: none;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        /* Direções e trajetórias variadas */
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.2; }
+            80% { opacity: 0.2; }
+            100% { transform: translateY(-10vh) translateX(40px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes floatDown {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.2; }
+            80% { opacity: 0.2; }
+            100% { transform: translateY(110vh) translateX(-50px) rotate(-360deg); opacity: 0; }
+        }
+
+        @keyframes floatDiagonal {
+            0% { transform: translateY(110vh) translateX(-20vw) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.25; }
+            100% { transform: translateY(-10vh) translateX(20vw) rotate(180deg); opacity: 0; }
         }
 
         @keyframes floatAnim {
@@ -454,19 +476,35 @@
     </div>
 
     <script>
-        const bgSymbols = ['🌳', '⛰️', '🗺️', '🦜', '☕', '💧', '🌿', '🏫'];
+      const bgSymbols = ['🌳', '⛰️', '🗺️', '🦜', '☕', '💧', '🌿', '🏫', '✨', '🇧🇷'];
+        const anims = ['floatUp', 'floatDown', 'floatDiagonal'];
         const bgContainer = document.getElementById('bg-elements');
-        for (let i = 0; i < 15; i++) {
+        
+        // Aumentado para 35 elementos com tamanhos e direções variadas
+        for (let i = 0; i < 35; i++) {
             const span = document.createElement('div');
             span.className = 'floating-icon';
             span.textContent = bgSymbols[Math.floor(Math.random() * bgSymbols.length)];
+            
+            // Posição horizontal aleatória
             span.style.left = Math.random() * 100 + 'vw';
-            span.style.fontSize = (Math.random() * 18 + 14) + 'px';
-            span.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            span.style.animationDelay = (Math.random() * 5) + 's';
+            
+            // Diferentes tamanhos (de 12px bem discretos até 38px grandes)
+            span.style.fontSize = (Math.random() * 26 + 12) + 'px';
+            
+            // Escolhe aleatoriamente uma das animações de direção
+            const selectedAnim = anims[Math.floor(Math.random() * anims.length)];
+            const duration = Math.random() * 12 + 8; // Velocidade variada (8s a 20s)
+            const delay = Math.random() * 8; // Atraso inicial
+            
+            span.style.animationName = selectedAnim;
+            span.style.animationDuration = duration + 's';
+            span.style.animationDelay = delay + 's';
+            
             bgContainer.appendChild(span);
         }
 
+        
         const questoes = [
             {
                 num: 1,
