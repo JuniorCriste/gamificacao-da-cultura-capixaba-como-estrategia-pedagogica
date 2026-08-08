@@ -145,16 +145,9 @@
             transition: all 0.2s;
         }
 
-        .start-btn:hover:not(:disabled) {
+        .start-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 9px 0 #bf360c;
-        }
-
-        .start-btn:disabled {
-            background: #b0bec5;
-            box-shadow: 0 6px 0 #78909c;
-            cursor: not-allowed;
-            opacity: 0.8;
         }
 
         .question-box {
@@ -568,11 +561,11 @@
 </head>
 <body>
 
-    <audio id="som-acerto" src="acerto.ogg" preload="auto"></audio>
-    <audio id="som-erro" src="erro.ogg" preload="auto"></audio>
-    <audio id="som-nota-baixa" src="notabaixa.ogg" preload="auto"></audio>
-    <audio id="som-notaboa" src="notaboa.ogg" preload="auto"></audio>
-    <audio id="som-trilha" src="trilha.ogg" loop preload="auto"></audio>
+    <audio id="som-acerto" src="aud/acerto.ogg" preload="auto"></audio>
+    <audio id="som-erro" src="aud/erro.ogg" preload="auto"></audio>
+    <audio id="som-nota-baixa" src="aud/notabaixa.ogg" preload="auto"></audio>
+    <audio id="som-notaboa" src="aud/notaboa.ogg" preload="auto"></audio>
+    <audio id="som-trilha" src="aud/trilha.ogg" loop preload="auto"></audio>
 
     <div class="bg-elements" id="bg-elements"></div>
 
@@ -587,9 +580,9 @@
     <div class="game-container">
         
         <div id="start-screen" class="start-screen">
-            <h1 id="start-title">BORA ESTUDAR: AULA GAMIFICAÇÃO DA CULTURA CAPIXABA!</h1>
-            <p id="start-desc">Carregando recursos e imagens do jogo... Por favor, aguarde um instante.</p>
-            <button id="start-btn" class="start-btn" onclick="iniciarJogo()" disabled>Carregando (0%)...</button>
+            <h1>BORA ESTUDAR: AULA GAMIFICAÇÃO DA CULTURA CAPIXABA!</h1>
+            <p>Teste seus conhecimentos sobre a história, geografia, fauna e cultura do Espírito Santo e de Ecoporanga nessa aventura interativa!</p>
+            <button class="start-btn" onclick="iniciarJogo()">Começar o Jogo 🚀</button>
         </div>
 
         <div id="quiz-screen" style="display: none; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -649,6 +642,69 @@
             bgContainer.appendChild(span);
         }
 
+
+        // Função de Pré-carregamento de Imagens
+        function precarregarImagens() {
+            const urlsImagens = [];
+            
+            questoes.forEach(q => {
+                if (q.imagem) urlsImagens.push(q.imagem);
+                if (q.imagemMudanca) urlsImagens.push(q.imagemMudanca);
+                if (q.alternativas) {
+                    q.alternativas.forEach(alt => {
+                        if (alt.imagemAlt) urlsImagens.push(alt.imagemAlt);
+                    });
+                }
+            });
+
+            // Remove duplicadas para evitar baixar a mesma imagem duas vezes
+            const imagensUnicas = [...new Set(urlsImagens)];
+            const totalImagens = imagensUnicas.length;
+            
+            if (totalImagens === 0) {
+                liberarBotaoComecar();
+                return;
+            }
+
+            let carregadas = 0;
+
+            imagensUnicas.forEach(src => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => {
+                    carregadas++;
+                    atualizarProgressoPreload(carregadas, totalImagens);
+                };
+                img.onerror = () => {
+                    carregadas++;
+                    atualizarProgressoPreload(carregadas, totalImagens);
+                };
+            });
+        }
+
+        function atualizarProgressoPreload(carregadas, total) {
+            const percentual = Math.floor((carregadas / total) * 100);
+            startDescEl.textContent = `Carregando recursos do jogo... (${carregadas}/${total} imagens carregadas)`;
+            startBtnEl.textContent = `Carregando (${percentual}%)...`;
+
+            if (carregadas >= total) {
+                liberarBotaoComecar();
+            }
+        }
+
+        function liberarBotaoComecar() {
+            startDescEl.textContent = "Teste seus conhecimentos sobre a história, geografia, fauna e cultura do Espírito Santo e de Ecoporanga nessa aventura interativa!";
+            startBtnEl.textContent = "Começar o Jogo 🚀";
+            startBtnEl.disabled = false;
+        }
+
+        // Inicia o preload assim que a página abre
+        window.addEventListener("DOMContentLoaded", () => {
+            precarregarImagens();
+        });
+
+
+
         const questoes = [
             {
                 num: 1,
@@ -696,10 +752,10 @@
                 imagem: "",
                 tipo: "imagem",
                 alternativas: [
-                    { texto: "A) Manga", imagemAlt: "img/folhagemmanga.jpg", correta: false },
-                    { texto: "B) Café", imagemAlt: "img/folhagemcafe.jpg", correta: false },
-                    { texto: "C) Imburana", imagemAlt: "img/folhagemimburana.jpg", correta: true },
-                    { texto: "D) Goiabeira", imagemAlt: "img/folhagemgoiabeira.jpg", correta: false }
+                    { texto: "A", imagemAlt: "img/folhagemmanga.jpg", correta: false },
+                    { texto: "B", imagemAlt: "img/folhagemcafe.jpg", correta: false },
+                    { texto: "C", imagemAlt: "img/folhagemimburana.jpg", correta: true },
+                    { texto: "D", imagemAlt: "img/folhagemgoiabeira.jpg", correta: false }
                 ]
             },
             {
@@ -842,7 +898,7 @@
                 tipo: "texto",
                 alternativas: [
                     { texto: "Ele foi ao Convento com colegas da escola.", correta: false },
-                    { texto: "He visitou o Convento da Penha com sua família.", correta: true },
+                    { texto: "Ele visitou o Convento da Penha com sua família.", correta: true },
                     { texto: "Ele passou o sábado inteiro brincando na praia.", correta: false },
                     { texto: "Ele conheceu o Convento durante viagem para outro estado.", correta: false }
                 ]
@@ -881,75 +937,12 @@
         const questionBoxWrapper = document.getElementById("question-box-wrapper");
         const resultIconEl = document.getElementById("result-icon");
         const resultTitleEl = document.getElementById("result-title");
-        const startBtnEl = document.getElementById("start-btn");
-        const startDescEl = document.getElementById("start-desc");
 
         const somAcerto = document.getElementById("som-acerto");
         const somErro = document.getElementById("som-erro");
-        const somNotaBaixa = document.getElementById("som-notabaixa");
+        const somNotaBaixa = document.getElementById("som-nota-baixa");
         const somNotaBoa = document.getElementById("som-notaboa");
         const somTrilha = document.getElementById("som-trilha");
-
-        // Função de Pré-carregamento de Imagens
-        function precarregarImagens() {
-            const urlsImagens = [];
-            
-            questoes.forEach(q => {
-                if (q.imagem) urlsImagens.push(q.imagem);
-                if (q.imagemMudanca) urlsImagens.push(q.imagemMudanca);
-                if (q.alternativas) {
-                    q.alternativas.forEach(alt => {
-                        if (alt.imagemAlt) urlsImagens.push(alt.imagemAlt);
-                    });
-                }
-            });
-
-            // Remove duplicadas para evitar baixar a mesma imagem duas vezes
-            const imagensUnicas = [...new Set(urlsImagens)];
-            const totalImagens = imagensUnicas.length;
-            
-            if (totalImagens === 0) {
-                liberarBotaoComecar();
-                return;
-            }
-
-            let carregadas = 0;
-
-            imagensUnicas.forEach(src => {
-                const img = new Image();
-                img.src = src;
-                img.onload = () => {
-                    carregadas++;
-                    atualizarProgressoPreload(carregadas, totalImagens);
-                };
-                img.onerror = () => {
-                    // Mesmo se houver erro em alguma imagem específica, o jogo não trava
-                    carregadas++;
-                    atualizarProgressoPreload(carregadas, totalImagens);
-                };
-            });
-        }
-
-        function atualizarProgressoPreload(carregadas, total) {
-            const percentual = Math.floor((carregadas / total) * 100);
-            startDescEl.textContent = `Carregando recursos do jogo... (${carregadas}/${total} imagens carregadas)`;
-            startBtnEl.textContent = `Carregando (${percentual}%)...`;
-
-            if (carregadas >= total) {
-                liberarBotaoComecar();
-            }
-        }
-
-        function liberarBotaoComecar() {
-            startDescEl.textContent = "Teste seus conhecimentos sobre a história, geografia, fauna e cultura do Espírito Santo e de Ecoporanga nessa aventura interativa!";
-            startBtnEl.textContent = "Começar o Jogo 🚀";
-            startBtnEl.disabled = false;
-        }
-
-        // Inicia o preload assim que a página abre
-        window.addEventListener("DOMContentLoaded", () => {
-            precarregarImagens();
-        });
 
         function iniciarJogo() {
             document.body.classList.remove("defeat-theme");
