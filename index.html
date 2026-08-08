@@ -16,6 +16,15 @@
             --text-main: #263238;
         }
 
+        /* Variáveis dinâmicas para tela de derrota */
+        body.defeat-theme {
+            --primary: #b71c1c;
+            --primary-light: #c62828;
+            --secondary: #455a64;
+            --bg-gradient: linear-gradient(135deg, #37474f 0%, #212121 100%);
+            --accent: #d32f2f;
+        }
+
         *, *::before, *::after {
             box-sizing: border-box;
         }
@@ -32,6 +41,7 @@
             align-items: center;
             overflow: hidden;
             position: relative;
+            transition: background 0.5s ease;
         }
 
         .bg-elements {
@@ -249,19 +259,34 @@
             text-align: center;
             height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
         .split-image {
             max-width: 100%;
-            max-height: 70%;
+            max-height: 64%;
             width: auto;
             border-radius: 18px;
             border: 4px solid var(--primary-light);
             box-shadow: 0 12px 30px rgba(0,0,0,0.3);
             object-fit: contain;
             background: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .split-image:hover {
+            transform: scale(1.03);
+        }
+
+        .image-hint-legend {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-top: 6px;
+            font-style: italic;
+            font-weight: 600;
         }
 
         .split-options-container {
@@ -446,6 +471,10 @@
             margin-bottom: 18px;
         }
 
+        body.defeat-theme .score-message {
+            color: #c62828;
+        }
+
         .restart-btn {
             background: linear-gradient(135deg, #2e7d32, #1b5e20);
             color: white;
@@ -459,9 +488,74 @@
             transition: all 0.2s;
         }
 
+        body.defeat-theme .restart-btn {
+            background: linear-gradient(135deg, #c62828, #b71c1c);
+            box-shadow: 0 6px 0 #5f0f0f;
+        }
+
+        body.defeat-theme .restart-btn:hover {
+            box-shadow: 0 9px 0 #5f0f0f;
+        }
+
         .restart-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 9px 0 #0f3811;
+        }
+
+        /* Modal para zoom da imagem */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: #fff;
+            padding: 15px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .modal-content img {
+            max-width: 85vw;
+            max-height: 75vh;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-family: 'Fredoka', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -474,6 +568,14 @@
     <audio id="som-trilha" src="aud/trilha.ogg" loop preload="auto"></audio>
 
     <div class="bg-elements" id="bg-elements"></div>
+
+    <!-- Modal de Zoom de Imagem -->
+    <div class="modal-overlay" id="image-modal" onclick="fecharModalZoom()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="fecharModalZoom()">×</button>
+            <img id="modal-img" src="" alt="Imagem Ampliada">
+        </div>
+    </div>
 
     <div class="game-container">
         
@@ -509,8 +611,8 @@
         </div>
 
         <div class="score-screen" id="score-screen">
-            <div class="trophy-icon">🏆</div>
-            <h2>Fim da Aventura!</h2>
+            <div class="trophy-icon" id="result-icon">🏆</div>
+            <h2 id="result-title">Fim da Aventura!</h2>
             <div class="score-stats" id="final-score-text"></div>
             <div class="score-message" id="final-message"></div>
             <button class="restart-btn" onclick="reiniciarJogo()">Jogar Novamente 🔄</button>
@@ -612,6 +714,7 @@
                 texto: "Observe o mapa distrital e responda: Qual dos distritos abaixo está mais distante de Imburana?",
                 imagem: "img/Mapa de Distritos Ecoporanga.png",
                 tipo: "split",
+                zoomavel: true,
                 alternativas: [
                     { texto: "Cotaxé.", correta: false },
                     { texto: "Joaçuba.", correta: false },
@@ -769,6 +872,8 @@
         const finalScoreTextEl = document.getElementById("final-score-text");
         const finalMessageEl = document.getElementById("final-message");
         const questionBoxWrapper = document.getElementById("question-box-wrapper");
+        const resultIconEl = document.getElementById("result-icon");
+        const resultTitleEl = document.getElementById("result-title");
 
         const somAcerto = document.getElementById("som-acerto");
         const somErro = document.getElementById("som-erro");
@@ -777,6 +882,7 @@
         const somTrilha = document.getElementById("som-trilha");
 
         function iniciarJogo() {
+            document.body.classList.remove("defeat-theme");
             startScreenEl.style.display = "none";
             quizScreenEl.style.display = "flex";
             
@@ -795,6 +901,18 @@
                 [arr[i], arr[j]] = [arr[j], arr[i]];
             }
             return arr;
+        }
+
+        function abrirModalZoom(src) {
+            const modal = document.getElementById("image-modal");
+            const modalImg = document.getElementById("modal-img");
+            modalImg.src = src;
+            modal.classList.add("active");
+        }
+
+        function fecharModalZoom() {
+            const modal = document.getElementById("image-modal");
+            modal.classList.remove("active");
         }
 
         function carregarQuestao() {
@@ -819,9 +937,18 @@
             if (q.tipo === "split") {
                 const splitDiv = document.createElement("div");
                 splitDiv.className = "split-layout";
+                
+                let legendHtml = "";
+                let clickAttr = "";
+                if (q.zoomavel) {
+                    legendHtml = `<div class="image-hint-legend">🔍 Clique na imagem para ver ampliado</div>`;
+                    clickAttr = `onclick="abrirModalZoom('${q.imagem}')"`;
+                }
+
                 splitDiv.innerHTML = `
                     <div class="split-image-container">
-                        <img id="question-image" class="split-image" src="${q.imagem}" alt="Imagem da Questão">
+                        <img id="question-image" class="split-image" src="${q.imagem}" alt="Imagem da Questão" ${clickAttr}>
+                        ${legendHtml}
                     </div>
                     <div class="split-options-container" id="options-container"></div>
                 `;
@@ -861,9 +988,15 @@
 
             } else {
                 if (q.imagem) {
+                    let legendHtml = "";
+                    let clickAttr = "";
+                    if (q.zoomavel) {
+                        legendHtml = `<div class="image-hint-legend">🔍 Clique na imagem para ver ampliado</div>`;
+                        clickAttr = `onclick="abrirModalZoom('${q.imagem}')"`;
+                    }
                     const mediaDiv = document.createElement("div");
                     mediaDiv.className = "media-container";
-                    mediaDiv.innerHTML = `<img id="question-image" class="question-image" src="${q.imagem}" alt="Imagem da Questão">`;
+                    mediaDiv.innerHTML = `<img id="question-image" class="question-image" src="${q.imagem}" alt="Imagem da Questão" ${clickAttr}>${legendHtml}`;
                     dynamicContentArea.appendChild(mediaDiv);
                 }
 
@@ -888,7 +1021,6 @@
             const botoes = dynamicContentArea.querySelectorAll("button");
             botoes.forEach(b => b.disabled = true);
 
-            // Se a questão possui imagem de mudança (como a questão 12), atualiza a imagem ao responder
             if (q.imagemMudanca) {
                 const imagemEl = document.getElementById("question-image");
                 if (imagemEl) {
@@ -946,10 +1078,16 @@
             finalScoreTextEl.textContent = `Sua nota final foi: ${notaFinal.toFixed(1)} de 10.0`;
 
             if (notaFinal < 6) {
+                document.body.classList.add("defeat-theme");
+                resultIconEl.textContent = "⚠️";
+                resultTitleEl.textContent = "Quase lá!";
                 finalMessageEl.textContent = "Continue estudando e praticando! Você consegue melhorar ainda mais!";
                 somNotaBaixa.currentTime = 0;
                 somNotaBaixa.play();
             } else {
+                document.body.classList.remove("defeat-theme");
+                resultIconEl.textContent = "🏆";
+                resultTitleEl.textContent = "Fim da Aventura!";
                 finalMessageEl.textContent = "Parabéns! Excelente desempenho na nossa aventura cultural!";
                 somNotaBoa.currentTime = 0;
                 somNotaBoa.play();
