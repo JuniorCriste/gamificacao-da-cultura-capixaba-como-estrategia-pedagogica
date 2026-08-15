@@ -26,7 +26,10 @@ Quiz interativo educacional focado na história, geografia, fauna, cultura do Es
 
 ---
 
-## 🚀 Como Executar o Projeto
-1. Clone o repositório ou baixe os arquivos para a sua máquina.
-2. Certifique-se de manter a estrutura de pastas correta (com a pasta `img/` contendo as mídias e os arquivos de áudio necessários).
-3. Abra o arquivo `index.html` em qualquer navegador web moderno para começar a aventura!
+## 🎓 Créditos e Motivação do Projeto
+
+Este projeto foi desenvolvido com base no [Quiz Capixaba](https://github.com/JuniorCriste/QuizCapixaba), servindo como uma adaptação e evolução da proposta original.
+
+O quiz foi desenvolvido como parte de uma **pesquisa científica**, vinculada ao **Trabalho de Conclusão Final II (TCF II)** da Pós-Graduação em **Informática na Educação**, do **Instituto Federal do Espírito Santo (IFES)**.
+
+A proposta tem como objetivo utilizar a **gamificação e recursos digitais** como estratégias pedagógicas para o ensino e a valorização de conteúdos relacionados à cultura e à identidade capixaba, considerando o contexto educacional e regional dos estudantes.
