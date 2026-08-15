@@ -1,6 +1,7 @@
 # BORA ESTUDAR: AULA GAMIFICAÇÃO DA CULTURA CAPIXABA! 🚀🌴
 
 Quiz interativo educacional focado na história, geografia, fauna, cultura do Espírito Santo e no município de Ecoporanga, desenvolvido com uma proposta gamificada para engajar os estudantes.
+
 [Acessar Quiz](https://juniorcriste.github.io/gamificacao-da-cultura-capixaba-como-estrategia-pedagogica/)
 
 ---
