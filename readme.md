@@ -5,8 +5,6 @@ Quiz interativo educacional focado na história, geografia, fauna, cultura do Es
 [Acessar Quiz](https://juniorcriste.github.io/gamificacao-da-cultura-capixaba-como-estrategia-pedagogica/)
 
 
----
-
 ## 🎓 Créditos e Motivação do Projeto
 
 Este projeto foi desenvolvido com base no [Quiz Capixaba](https://github.com/JuniorCriste/QuizCapixaba), servindo como uma adaptação para um público-alvo de Fundamental - Anos Iniciais.
@@ -19,14 +17,11 @@ A proposta tem como objetivo utilizar a **gamificação e recursos digitais** co
 ---
 # Informações Técnicas
 
----
-
 ## 🛠️ Tecnologias Utilizadas
 * **HTML5** (Estruturação semântica)
 * **CSS3** (Estilização avançada com variáveis dinâmicas, animações e layout responsivo)
 * **JavaScript** (Lógica do quiz, embaralhamento dinâmico de questões, sistema de pontuação e pré-carregamento de recursos)
 
----
 
 
 ## ✨ Funcionalidades do Projeto
@@ -35,7 +30,6 @@ A proposta tem como objetivo utilizar a **gamificação e recursos digitais** co
 * **Modo Zoom de Imagens:** Permite que o usuário amplie mapas e imagens detalhadas (como na questão do mapa dos distritos) através de um modal interativo.
 * **Feedback Sonoro e Trilha Sonora:** Suporte a efeitos sonoros de acerto/erro e trilha sonora imersiva de fundo.
 
----
 
 ## 🎵 Créditos de Áudio
 * **Trilha sonora:** *Game Gaming Video Game Music* por **HitsLab** (Disponível em: [Pixabay](https://pixabay.com/music/video-games-game-gaming-video-game-music-459876/))
