@@ -15,6 +15,10 @@ O quiz foi desenvolvido como parte de uma **pesquisa científica**, vinculada ao
 
 A proposta tem como objetivo utilizar a **gamificação e recursos digitais** como estratégias pedagógicas para o ensino e a valorização de conteúdos relacionados à cultura e à identidade capixaba, considerando o contexto educacional e regional dos estudantes.
 
+
+---
+# Informações Técnicas
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
@@ -22,9 +26,8 @@ A proposta tem como objetivo utilizar a **gamificação e recursos digitais** co
 * **CSS3** (Estilização avançada com variáveis dinâmicas, animações e layout responsivo)
 * **JavaScript** (Lógica do quiz, embaralhamento dinâmico de questões, sistema de pontuação e pré-carregamento de recursos)
 
-
 ---
-# Informações Técnicas
+
 
 ## ✨ Funcionalidades do Projeto
 * **Pré-carregamento de Imagens (Preload):** Carrega e armazena em cache todas as imagens do jogo antes de iniciar, garantindo transições suaves e sem atrasos durante as questões.
