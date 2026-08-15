@@ -14,8 +14,11 @@ O quiz foi desenvolvido como parte de uma **pesquisa científica**, vinculada ao
 A proposta tem como objetivo utilizar a **gamificação e recursos digitais** como estratégias pedagógicas para o ensino e a valorização de conteúdos relacionados à cultura e à identidade capixaba, considerando o contexto educacional e regional dos estudantes.
 
 
+
 ---
 # Informações Técnicas
+
+
 
 ## 🛠️ Tecnologias Utilizadas
 * **HTML5** (Estruturação semântica)
