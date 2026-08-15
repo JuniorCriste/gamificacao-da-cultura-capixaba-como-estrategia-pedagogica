@@ -28,7 +28,7 @@ Quiz interativo educacional focado na história, geografia, fauna, cultura do Es
 
 ## 🎓 Créditos e Motivação do Projeto
 
-Este projeto foi desenvolvido com base no [Quiz Capixaba](https://github.com/JuniorCriste/QuizCapixaba), servindo como uma adaptação e evolução da proposta original.
+Este projeto foi desenvolvido com base no [Quiz Capixaba](https://github.com/JuniorCriste/QuizCapixaba), servindo como uma adaptação para um público-alvo de Fundamental - Anos Iniciais.
 
 O quiz foi desenvolvido como parte de uma **pesquisa científica**, vinculada ao **Trabalho de Conclusão Final II (TCF II)** da Pós-Graduação em **Informática na Educação**, do **Instituto Federal do Espírito Santo (IFES)**.
 
